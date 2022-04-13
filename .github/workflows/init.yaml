@@ -1,12 +1,44 @@
-# This is a placeholder so actions won't default to a getting started page
+name: Deploy my labbda functions
 
-name: Placeholder
-
-on: push
-
+on:
+  push:
+    branches:
+      - main
 jobs:
-  init:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Run a one-line script
-        run: echo Hello, world!
+    - name: Check out code.
+      uses: actions/checkout@v2
+    - name: Python setup
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: install libraries
+      run: |
+          cd function
+          python -m pip install --upgrade pip
+          if [-f requirements.txt]; then pip install -r requirements.txt -t .; fi 
+    - name: Create Zip Bundle
+      run:  |
+          cd function
+          zip -r ../${{ github.sha }}.zip .
+    - name: zipped bundle
+      uses: actions/upload-artifact@v2
+      with:
+        name: zipped-bundle
+        path: ${{ github.sha }}.zip
+          
+ publish:
+   runs-on: ubuntu-latest
+   steps:
+   - name: create release
+     uses: actions/create-release@v1
+       env:
+          GITHUB_TOKEN: ${{ github.run_number }}
+       with:
+          tag_name: ${{ github.run_number }}
+          release_name: Release from ${{ github.run_number }}
+          body: This release qos created by my from ${{ github.run_number }}
+          draft: false
+          prerelease: false
