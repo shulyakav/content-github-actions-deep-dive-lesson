@@ -6,7 +6,7 @@ on:
       - main
 jobs:
   build:
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
     steps:
     - name: Check out code.
       uses: actions/checkouot@v2
@@ -23,9 +23,9 @@ jobs:
       run:  |
           cd function
           zip -r ../${{ github.sha }}.zip .
-     - name: zipped bundle
-       uses: actions/upload-artifact@v2
-         with:
-           name: zipped-bundle
-           path: ${{ github.sha }}.zip
+    - name: zipped bundle
+      uses: actions/upload-artifact@v2
+      with:
+        name: zipped-bundle
+        path: ${{ github.sha }}.zip
           
