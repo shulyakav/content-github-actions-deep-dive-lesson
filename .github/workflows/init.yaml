@@ -51,7 +51,7 @@ jobs:
     - name: upload release assets 
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.github_token }
+        GITHUB_TOKEN: ${{ secrets.github_token }}
       with:
         upload_url: ${{ steps.create-release.outputs.upload_url }}
         asset_path: ./${{ github.sha }}.zip
